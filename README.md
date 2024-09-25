@@ -7,9 +7,9 @@ An Invoice creator project built with React. Add itemized items, configure quant
 
 
 ### Screenshots
-<img src="" style="max-width: 100px; width: 100%; height: auto;">
-<img src="" style="max-width: 100px; width: 100%; height: auto;">
-<img src="" style="max-width: 100px; width: 100%; height: auto;">
+<img src="https://github.com/user-attachments/assets/2669a6d0-c4f5-447c-b704-22c1eb488998" style="max-width: 100px; width: 100%; height: auto;">
+<img src="https://github.com/user-attachments/assets/d7be7ffe-1112-4020-be47-b5b2b77c1df4" style="max-width: 100px; width: 100%; height: auto;">
+<img src="https://github.com/user-attachments/assets/a2e11cc7-9b73-488e-ad2d-b8dd2518f7f6" style="max-width: 100px; width: 100%; height: auto;">
 
 ### Installation
 
