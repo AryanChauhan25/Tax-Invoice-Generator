@@ -27,6 +27,7 @@ function GenerateInvoice() {
 }
 
 class InvoiceModal extends React.Component {
+  // eslint-disable-next-line
   constructor(props) {
     super(props);
   }
@@ -37,7 +38,7 @@ class InvoiceModal extends React.Component {
           <div id="invoiceCapture">
             <div className="d-flex flex-row justify-content-between align-items-start bg-light w-100 p-4">
               <div className="w-100">
-                <h4 className="fw-bold my-2">{this.props.info.billFrom||'John Uberbacher'}</h4>
+                <h4 className="fw-bold my-2">{this.props.info.billFrom||'Aryan Chauhan'}</h4>
                 <h6 className="fw-bold text-secondary mb-1">
                   Invoice #: {this.props.info.invoiceNumber||''}
                 </h6>
@@ -49,22 +50,31 @@ class InvoiceModal extends React.Component {
             </div>
             <div className="p-4">
               <Row className="mb-4">
-                <Col md={4}>
+                <Col md={6}>
                   <div className="fw-bold">Billed to:</div>
                   <div>{this.props.info.billTo||''}</div>
                   <div>{this.props.info.billToAddress||''}</div>
                   <div>{this.props.info.billToEmail||''}</div>
+                  <div>GSTIN {this.props.info.billToGSTIN||''}</div>
                 </Col>
-                <Col md={4}>
+                <Col md={6}>
                   <div className="fw-bold">Billed From:</div>
                   <div>{this.props.info.billFrom||''}</div>
                   <div>{this.props.info.billFromAddress||''}</div>
                   <div>{this.props.info.billFromEmail||''}</div>
+                  <div>GSTIN {this.props.info.billFromGSTIN||''}</div>
                 </Col>
-                <Col md={4}>
-                  <div className="fw-bold mt-2">Date Of Issue:</div>
-                  <div>{this.props.info.dateOfIssue||''}</div>
+                <Col md={6}>
+                  <div className="fw-bold mt-2">Invoice Date:<span className="fw-normal ms-2">{this.props.info.dateOfInvoice||''}</span></div>
                 </Col>
+                <Col md={6}>
+                  <div className="fw-bold mt-2">Due Date:<span className="fw-normal ms-2">{this.props.info.dateOfDue||''}</span></div>
+                </Col>
+                {this.props.info.placeOfSupply &&
+                  <Col md={4}>
+                    <div className="fw-bold mt-2">Place of Supply:<span className="fw-normal ms-2">{this.props.info.placeOfSupply||''}</span></div>
+                </Col>
+                }
               </Row>
               <Table className="mb-0">
                 <thead>
@@ -104,14 +114,14 @@ class InvoiceModal extends React.Component {
                     <td className="fw-bold" style={{width: '100px'}}>SUBTOTAL</td>
                     <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.subTotal}</td>
                   </tr>
-                  {this.props.taxAmmount != 0.00 &&
+                  {this.props.taxAmmount !== 0.00 &&
                     <tr className="text-end">
                       <td></td>
                       <td className="fw-bold" style={{width: '100px'}}>TAX</td>
                       <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.taxAmmount}</td>
                     </tr>
                   }
-                  {this.props.discountAmmount != 0.00 &&
+                  {this.props.discountAmmount !== 0.00 &&
                     <tr className="text-end">
                       <td></td>
                       <td className="fw-bold" style={{width: '100px'}}>DISCOUNT</td>
@@ -127,7 +137,13 @@ class InvoiceModal extends React.Component {
               </Table>
               {this.props.info.notes &&
                 <div className="bg-light py-3 px-4 rounded">
+                  <h5>Notes:</h5>
                   {this.props.info.notes}
+                </div>}
+                {this.props.info.termsAndConditions &&
+                <div className="bg-light py-3 px-4 rounded mt-4">
+                  <h5>Terms and Conditions:</h5>
+                  {this.props.info.termsAndConditions}
                 </div>}
             </div>
           </div>

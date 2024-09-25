@@ -14,17 +14,22 @@ class InvoiceForm extends React.Component {
     super(props);
     this.state = {
       isOpen: false,
-      currency: '$',
+      currency: '₹',
       currentDate: '',
       invoiceNumber: 1,
-      dateOfIssue: '',
+      dateOfInvoice: '',
+      dateOfDue: '',
       billTo: '',
       billToEmail: '',
       billToAddress: '',
+      billToGSTIN: '',
       billFrom: '',
       billFromEmail: '',
       billFromAddress: '',
+      billFromGSTIN: '',
+      placeOfSupply: '',
       notes: '',
+      termsAndConditions: '',
       total: '0.00',
       subTotal: '0.00',
       taxRate: '',
@@ -37,8 +42,8 @@ class InvoiceForm extends React.Component {
         id: 0,
         name: '',
         description: '',
-        price: '1.00',
-        quantity: 1
+        price: '0.00',
+        quantity: 0
       }
     ];
     this.editField = this.editField.bind(this);
@@ -67,6 +72,7 @@ class InvoiceForm extends React.Component {
     var items = this.state.items;
     var subTotal = 0;
 
+    // eslint-disable-next-line
     items.map(function(items) {
       subTotal = parseFloat(subTotal + (parseFloat(items.price).toFixed(2) * parseInt(items.quantity))).toFixed(2)
     });
@@ -97,6 +103,7 @@ class InvoiceForm extends React.Component {
     var items = this.state.items.slice();
     var newItems = items.map(function(items) {
       for (var key in items) {
+        // eslint-disable-next-line
         if (key == item.name && items.id == item.id) {
           items[key] = item.value;
         }
@@ -129,14 +136,16 @@ class InvoiceForm extends React.Component {
             <div className="d-flex flex-row align-items-start justify-content-between mb-3">
               <div class="d-flex flex-column">
                 <div className="d-flex flex-column">
-                  <div class="mb-2">
-                    <span className="fw-bold">Current&nbsp;Date:&nbsp;</span>
-                    <span className="current-date">{new Date().toLocaleDateString()}</span>
+                  <div class="d-flex flex-row align-items-center mb-2">
+                    <span className="fw-bold">Invoice&nbsp;Date:&nbsp;</span>
+                    <Form.Control type="date" placeholder={new Date().toLocaleDateString()} value={this.state.dateOfInvoice} name={"dateOfInvoice"} onChange={(event) => this.editField(event)} style={{
+                      maxWidth: '150px'
+                    }} required="required"/>
                   </div>
                 </div>
                 <div className="d-flex flex-row align-items-center">
                   <span className="fw-bold d-block me-2">Due&nbsp;Date:</span>
-                  <Form.Control type="date" value={this.state.dateOfIssue} name={"dateOfIssue"} onChange={(event) => this.editField(event)} style={{
+                  <Form.Control type="date" value={this.state.dateOfDue} name={"dateOfDue"} onChange={(event) => this.editField(event)} style={{
                       maxWidth: '150px'
                     }} required="required"/>
                 </div>
@@ -149,18 +158,26 @@ class InvoiceForm extends React.Component {
               </div>
             </div>
             <hr className="my-4"/>
-            <Row className="mb-5">
+            <Row className="mb-3">
               <Col>
                 <Form.Label className="fw-bold">Bill to:</Form.Label>
-                <Form.Control placeholder={"Who is this invoice to?"} rows={3} value={this.state.billTo} type="text" name="billTo" className="my-2" onChange={(event) => this.editField(event)} autoComplete="name" required="required"/>
-                <Form.Control placeholder={"Email address"} value={this.state.billToEmail} type="email" name="billToEmail" className="my-2" onChange={(event) => this.editField(event)} autoComplete="email" required="required"/>
-                <Form.Control placeholder={"Billing address"} value={this.state.billToAddress} type="text" name="billToAddress" className="my-2" autoComplete="address" onChange={(event) => this.editField(event)} required="required"/>
+                <Form.Control placeholder={"Client's Name/Company Name"} rows={4} value={this.state.billTo} type="text" name="billTo" className="my-2" onChange={(event) => this.editField(event)} autoComplete="name" required="required"/>
+                <Form.Control placeholder={"Client's Email address"} value={this.state.billToEmail} type="email" name="billToEmail" className="my-2" onChange={(event) => this.editField(event)} autoComplete="email" required="required"/>
+                <Form.Control placeholder={"Client's Billing address"} value={this.state.billToAddress} type="text" name="billToAddress" className="my-2" autoComplete="address" onChange={(event) => this.editField(event)} required="required"/>
+                <Form.Control placeholder={"Client's GSTIN"} value={this.state.billToGSTIN} type="text" name="billToGSTIN" className="my-2" autoComplete="GSTIN" onChange={(event) => this.editField(event)} required="required"/>
               </Col>
               <Col>
                 <Form.Label className="fw-bold">Bill from:</Form.Label>
-                <Form.Control placeholder={"Who is this invoice from?"} rows={3} value={this.state.billFrom} type="text" name="billFrom" className="my-2" onChange={(event) => this.editField(event)} autoComplete="name" required="required"/>
-                <Form.Control placeholder={"Email address"} value={this.state.billFromEmail} type="email" name="billFromEmail" className="my-2" onChange={(event) => this.editField(event)} autoComplete="email" required="required"/>
-                <Form.Control placeholder={"Billing address"} value={this.state.billFromAddress} type="text" name="billFromAddress" className="my-2" autoComplete="address" onChange={(event) => this.editField(event)} required="required"/>
+                <Form.Control placeholder={"Company's Name"} rows={4} value={this.state.billFrom} type="text" name="billFrom" className="my-2" onChange={(event) => this.editField(event)} autoComplete="name" required="required"/>
+                <Form.Control placeholder={"Company's Email address"} value={this.state.billFromEmail} type="email" name="billFromEmail" className="my-2" onChange={(event) => this.editField(event)} autoComplete="email" required="required"/>
+                <Form.Control placeholder={"Company's Billing address"} value={this.state.billFromAddress} type="text" name="billFromAddress" className="my-2" autoComplete="address" onChange={(event) => this.editField(event)} required="required"/>
+                <Form.Control placeholder={"Company's GSTIN"} value={this.state.billFromGSTIN} type="text" name="billFromGSTIN" className="my-2" autoComplete="GSTIN" onChange={(event) => this.editField(event)} required="required"/>
+              </Col>
+            </Row>
+            <Row className="mb-5">
+              <Col>
+                <Form.Label className="fw-bold">Place of Supply:</Form.Label>
+                <Form.Control placeholder="Where is this invoice being issued?" value={this.state.placeOfSupply} type="text" name="placeOfSupply" className="my-2" onChange={(event) => this.editField(event)} rows={1}/>
               </Col>
             </Row>
             <InvoiceItem onItemizedItemEdit={this.onItemizedItemEdit.bind(this)} onRowAdd={this.handleAddEvent.bind(this)} onRowDel={this.handleRowDel.bind(this)} currency={this.state.currency} items={this.state.items}/>
@@ -200,16 +217,20 @@ class InvoiceForm extends React.Component {
             </Row>
             <hr className="my-4"/>
             <Form.Label className="fw-bold">Notes:</Form.Label>
-            <Form.Control placeholder="Thanks for your business!" name="notes" value={this.state.notes} onChange={(event) => this.editField(event)} as="textarea" className="my-2" rows={1}/>
+            <Form.Control placeholder="It was great doing business with you." name="notes" value={this.state.notes} onChange={(event) => this.editField(event)} as="textarea" className="my-2" rows={1}/>
+            <hr className="my-4"/>
+            <Form.Label className="fw-bold">Terms and Conditions:</Form.Label>
+            <Form.Control placeholder="Please make the payment by the due date." name="termsAndConditions" value={this.state.termsAndConditions} onChange={(event) => this.editField(event)} as="textarea" className="my-2" rows={1}/>
           </Card>
         </Col>
         <Col md={4} lg={3}>
-          <div className="sticky-top pt-md-3 pt-xl-4">
+          <div className="sticky-top pt-md-3 pt-xl-4 ma-5">
             <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
             <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total}/>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Currency:</Form.Label>
               <Form.Select onChange={event => this.onCurrencyChange({currency: event.target.value})} className="btn btn-light my-1" aria-label="Change Currency">
+                <option value="₹">INR (Indian Rupee)</option>
                 <option value="$">USD (United States Dollar)</option>
                 <option value="£">GBP (British Pound Sterling)</option>
                 <option value="¥">JPY (Japanese Yen)</option>
